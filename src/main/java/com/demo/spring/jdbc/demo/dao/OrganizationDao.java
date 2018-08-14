@@ -21,6 +21,7 @@ public interface OrganizationDao {
     public boolean create(Organization organization);
     public Organization read(int id);
     public List<Organization> readAll();
+    public List<Organization> readErrorAll();
     public boolean update(Organization organization);
     public boolean delete(Organization organization);
     
