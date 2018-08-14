@@ -21,6 +21,10 @@ public class Organization {
     public Organization() {
     }
 
+    public Organization(int id) {
+        this.id = id;
+    }
+    
     public Organization(String companyName, int yearOfIncorporation, String postalCode, int employeeCount, String slogan) {
         this.companyName = companyName;
         this.yearOfIncorporation = yearOfIncorporation;
@@ -28,6 +32,17 @@ public class Organization {
         this.employeeCount = employeeCount;
         this.slogan = slogan;
     }
+
+    public Organization(int id, String companyName, int yearOfIncorporation, String postalCode, int employeeCount, String slogan) {
+        this.id = id;
+        this.companyName = companyName;
+        this.yearOfIncorporation = yearOfIncorporation;
+        this.postalCode = postalCode;
+        this.employeeCount = employeeCount;
+        this.slogan = slogan;
+    }
+    
+    
 
     /**
      * @return the id
