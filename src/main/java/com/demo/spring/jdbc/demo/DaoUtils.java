@@ -9,32 +9,34 @@ import com.demo.spring.jdbc.demo.dao.OrganizationDao;
 import com.demo.spring.jdbc.demo.domain.Organization;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author David
  */
+@Service
 public class DaoUtils {
 
-    public static final String createOperation = "CREATE";
-    public static final String readOperation = "READ";
-    public static final String updateOperation = "UPDATE";
-    public static final String deleteOperation = "DELETE";
-    public static final String cleanupOperation = "TRUNCATE";
+    public final String createOperation = "CREATE";
+    public final String readOperation = "READ";
+    public final String updateOperation = "UPDATE";
+    public final String deleteOperation = "DELETE";
+    public final String cleanupOperation = "TRUNCATE";
 
-    public static void printOrganizations(List<Organization> organizations, String operation) {
+    public void printOrganizations(List<Organization> organizations, String operation) {
         System.out.println("\nMostrar organizaciones al " + operation);
         for (Organization o : organizations) {
             System.out.println(" * " + o);
         }
     }
 
-    public static void printOrganization(Organization organizations, String operation) {
+    public void printOrganization(Organization organizations, String operation) {
         System.out.println("\nMostrar organizacion al " + operation);
         System.out.println(" * " + organizations);
     }
 
-    public static void printSuccessFailure(String operation, boolean param) {
+    public void printSuccessFailure(String operation, boolean param) {
         if (param) {
             System.out.println("\nOperation " + operation + " Successful");
         } else {
@@ -42,7 +44,7 @@ public class DaoUtils {
         }
     }
 
-    public static void createSeedData(OrganizationDao organizationDao) {
+    public void createSeedData(OrganizationDao organizationDao) {
         List<Organization> organizations = new ArrayList<>();
         organizations.add(0, new Organization("BMW", 1929, "45456", 10000, "BMW Slogan"));
         organizations.add(1, new Organization("Amazon", 1994, "75757", 20000, "Amazon Slogan"));
@@ -58,7 +60,7 @@ public class DaoUtils {
 
     }
 
-    public static void printOrganizationCount(List<Organization> organizations, String operation) {
+    public void printOrganizationCount(List<Organization> organizations, String operation) {
         System.out.println("\nActualmente se tiene " + organizations.size() + " organizaciones despues de la operacion de " + operation);
     }
 }

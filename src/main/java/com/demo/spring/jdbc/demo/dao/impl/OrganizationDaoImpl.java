@@ -11,8 +11,8 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -58,37 +58,64 @@ public class OrganizationDaoImpl implements OrganizationDao {
 
     @Override
     public Organization read(int id) {
-        String sqlQuery = "select * from organization where id = ?";
-        Object[] args = new Object[]{id};
-        Organization organization = jdbcTemplate.queryForObject(sqlQuery, args, new OrganizationRowMapper());
+        //JdbcTemplate
+//        String sqlQuery = "select * from organization where id = ?";
+//        Object[] args = new Object[]{id};
+//        Organization organization = jdbcTemplate.queryForObject(sqlQuery, args, new OrganizationRowMapper());
+//        return organization;
+
+        //NamedParameterJdbcTemplate
+        SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
+        String sqlQuery = "select * from organization where id = :id";
+        Organization organization = namedParameterJdbcTemplate.queryForObject(sqlQuery, parameterSource, new OrganizationRowMapper());
         return organization;
     }
 
     @Override
     public List<Organization> readAll() {
+        //JdbcTemplate
+//        String sqlQuery = "select * from organization";
+//        List<Organization> listOrganization = jdbcTemplate.query(sqlQuery, new OrganizationRowMapper());
+//        return listOrganization;
+        //NamedParameterJdbcTemplate
         String sqlQuery = "select * from organization";
-        List<Organization> listOrganization = jdbcTemplate.query(sqlQuery, new OrganizationRowMapper());
+        List<Organization> listOrganization = namedParameterJdbcTemplate.query(sqlQuery, new OrganizationRowMapper());
         return listOrganization;
     }
 
     @Override
     public boolean update(Organization organization) {
-        String sqlQuery = "update organization set slogan = ?  where id = ?";
-        Object[] args = new Object[]{organization.getSlogan(), organization.getId()};
-        return jdbcTemplate.update(sqlQuery, args) == 1;
+        //JdbcTemplate
+//        String sqlQuery = "update organization set slogan = ?  where id = ?";
+//        Object[] args = new Object[]{organization.getSlogan(), organization.getId()};
+//        return jdbcTemplate.update(sqlQuery, args) == 1;
+        //NamedParameterJdbcTemplate
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(organization);
+        String sqlQuery = "update organization set slogan = :slogan  where id = :id";
+        return namedParameterJdbcTemplate.update(sqlQuery, parameterSource) == 1;
+
     }
 
     @Override
     public boolean delete(Organization organization) {
-        String sqlQuery = "delete from organization where id = ?";
-        Object[] args = new Object[]{organization.getId()};
-        return jdbcTemplate.update(sqlQuery, args) == 1;
+        //JdbcTemplate
+//        String sqlQuery = "delete from organization where id = ?";
+//        Object[] args = new Object[]{organization.getId()};
+//        return jdbcTemplate.update(sqlQuery, args) == 1;
+        //NamedParameterJdbcTemplate
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(organization);
+        String sqlQuery = "delete from organization where id = :id";
+        return namedParameterJdbcTemplate.update(sqlQuery, parameterSource) == 1;
     }
 
     @Override
     public void cleanUp() {
         String sqlQuery = "TRUNCATE TABLE organization";
-        jdbcTemplate.execute(sqlQuery);
+        //JdbcTemplate
+        //jdbcTemplate.execute(sqlQuery);
+        //NamedParameterJdbcTemplate
+        namedParameterJdbcTemplate.getJdbcOperations().execute(sqlQuery);
+
     }
 
     @Override

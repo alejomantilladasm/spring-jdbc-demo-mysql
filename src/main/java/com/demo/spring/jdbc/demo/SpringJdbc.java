@@ -7,51 +7,67 @@ package com.demo.spring.jdbc.demo;
 
 import com.demo.spring.jdbc.demo.dao.OrganizationDao;
 import com.demo.spring.jdbc.demo.domain.Organization;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author David
  */
+@Component
 public class SpringJdbc {
 
-    public static void main(String[] args) {
+    @Autowired
+    private OrganizationDao organizationDao;
+    @Autowired
+    private DaoUtils daoUtils;
 
-        //Lectura de XML de spring con los beans
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("beans-cp.xml");
-        //Lectura de Bean 
-        OrganizationDao organizationDao = (OrganizationDao) ctx.getBean("organizationDao");
+    private void actionMethod() {        
 
-        DaoUtils.createSeedData(organizationDao);
+        daoUtils.createSeedData(organizationDao);
 
         //Recuperar organizaciones e imprimir
-        DaoUtils.printOrganizations(organizationDao.readAll(), DaoUtils.readOperation);
+        daoUtils.printOrganizations(organizationDao.readAll(), daoUtils.readOperation);
 
         //Crear nueva organizacion
         boolean isCreated = organizationDao.create(new Organization("Toyota", 1986, "87878", 30000, "Toyota slogan"));
-        DaoUtils.printSuccessFailure(DaoUtils.createOperation, isCreated);
+        daoUtils.printSuccessFailure(daoUtils.createOperation, isCreated);
 
         Organization o = organizationDao.read(4);
-        DaoUtils.printOrganization(o, DaoUtils.readOperation);
+        daoUtils.printOrganization(o, daoUtils.readOperation);
 
         boolean isUpdated = organizationDao.update(new Organization(3, "", 0, "", 0, "Slogan modificado de Google...!"));
-        DaoUtils.printSuccessFailure(DaoUtils.updateOperation, isUpdated);
+        daoUtils.printSuccessFailure(daoUtils.updateOperation, isUpdated);
 
         o = organizationDao.read(3);
-        DaoUtils.printOrganization(o, DaoUtils.readOperation);
+        daoUtils.printOrganization(o, daoUtils.readOperation);
 
-        DaoUtils.printOrganizationCount(organizationDao.readAll(), DaoUtils.createOperation);
+        daoUtils.printOrganizationCount(organizationDao.readAll(), daoUtils.createOperation);
 
         boolean isDeleted = organizationDao.delete(new Organization(3));
-        DaoUtils.printSuccessFailure(DaoUtils.deleteOperation, isDeleted);
+        daoUtils.printSuccessFailure(daoUtils.deleteOperation, isDeleted);
 
-        DaoUtils.printOrganizationCount(organizationDao.readAll(), DaoUtils.createOperation);
+        daoUtils.printOrganizationCount(organizationDao.readAll(), daoUtils.createOperation);
 
         //Cleanup
         organizationDao.cleanUp();
-        DaoUtils.printOrganizationCount(organizationDao.readAll(), DaoUtils.cleanupOperation);
+        daoUtils.printOrganizationCount(organizationDao.readAll(), daoUtils.cleanupOperation);
 
+        
+    }
+    
+    public static void main(String[] args) {
+        //Lectura de XML de spring con los beans
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("beans-cp.xml");
+        
+        SpringJdbc springJdbc=ctx.getBean(SpringJdbc.class);
+        springJdbc.actionMethod();
+        
+        //Lectura de Bean 
+        //OrganizationDao organizationDao = (OrganizationDao) ctx.getBean("organizationDao");
+        
         ((ClassPathXmlApplicationContext) ctx).close();
     }
 
